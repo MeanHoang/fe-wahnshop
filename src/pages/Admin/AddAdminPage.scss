@@ -1,0 +1,61 @@
+.admin-page {
+    display: flex;
+    height: 100vh
+}
+
+.navbar {
+    width: 250px;
+    height: 100vh;
+    background-color: #ffffff;
+    height: 100%;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 250px);
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+}
+
+.add-admin-form {
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 400px;
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 370px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #575757;
+            }
+        }
+    }
+}
