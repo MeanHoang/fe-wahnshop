@@ -17,7 +17,7 @@ const Navbar = () => {
             <ul>
                 <li><a href="/dashboard">Dashboard</a></li>
                 <li><a href="/admin">Manage Admin</a></li>
-                <li><a href="#manage-user">Manage User</a></li>
+                <li><a href="/user">Manage User</a></li>
 
                 <li className="submenu">
                     <a href="#manage-product" onClick={toggleProductsSubMenu}>
@@ -25,6 +25,7 @@ const Navbar = () => {
                     </a>
                     {showProductsSubMenu && (
                         <ul className="submenu-items">
+                            <li><a href="/product">Product</a></li>
                             <li><a href="#category">Category</a></li>
                             <li><a href="#attribute">Attribute</a></li>
                         </ul>

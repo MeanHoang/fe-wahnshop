@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux';
-import { adminRegisterReducer } from './admin/adminRegisterReducer';
-import { adminLoginReducer } from './admin/adminLoginReducer';
+import adminLoginReducer from './admin/adminLoginReducer';
+import adminRegisterReducer from './admin/adminRegisterReducer';
+import adminReducer from './admin/adminReducer';
+import userRegisterReducer from './user/userReducer';
 
 const rootReducer = combineReducers({
-    adminRegister: adminRegisterReducer,
     adminLogin: adminLoginReducer,
+    adminRegister: adminRegisterReducer,
+    adminList: adminReducer,
+    userRegister: userRegisterReducer,
 });
 
 export default rootReducer;

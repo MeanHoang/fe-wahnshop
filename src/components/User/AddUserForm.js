@@ -1,23 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerAdmin } from '../../redux/action/adminAction';
+import { registerUser } from '../../redux/action/userAction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './AddUserForm.scss';
 
 const AddUserForm = () => {
     const dispatch = useDispatch();
-    const { loading, successMessage, error } = useSelector(state => state.adminRegister);
+    const { loading, successMessage, error } = useSelector(state => state.userRegister);
 
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
+        phonenumber: '',
         fullname: '',
+        sex: true,
+        birthday: '',
+        height: '',
+        weight: '',
     });
 
     useEffect(() => {
         if (successMessage) {
             toast.success(successMessage);
+            setFormData({
+                email: '',
+                password: '',
+                phonenumber: '',
+                fullname: '',
+                sex: true,
+                birthday: '',
+                height: '',
+                weight: '',
+            });
         }
         if (error) {
             toast.error(error);
@@ -34,31 +49,47 @@ const AddUserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(registerAdmin(formData));
+        dispatch(registerUser(formData));
     };
 
     return (
-        <div className="add-admin-form">
-            <h2>ADD NEW ADMIN</h2>
+        <div className="add-user-form">
+            <h2>Add New User</h2>
             {loading && <p>Loading...</p>}
             <form onSubmit={handleSubmit}>
-                <label>Username</label>
+                <label>Email</label>
                 <input
-                    type="text"
-                    name="username"
-                    value={formData.username}
+                    type="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
                     required
                 />
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <label>Fullname</label>
+
+                <div className="input-group">
+                    <div className="input-field">
+                        <label>Phone Number</label>
+                        <input
+                            type="text"
+                            name="phonenumber"
+                            value={formData.phonenumber}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="input-field">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <label>Full Name</label>
                 <input
                     type="text"
                     name="fullname"
@@ -66,7 +97,51 @@ const AddUserForm = () => {
                     onChange={handleChange}
                     required
                 />
-                <button type="submit">Add</button>
+
+                <div className="input-group">
+                    <div className="input-field">
+                        <label>Sex</label>
+                        <select name="sex" value={formData.sex} onChange={handleChange} className="select-field">
+                            <option value={true}>Male</option>
+                            <option value={false}>Female</option>
+                        </select>
+                    </div>
+                    <div className="input-field">
+                        <label>Birthday</label>
+                        <input
+                            type="date"
+                            name="birthday"
+                            value={formData.birthday}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="input-group">
+                    <div className="input-field">
+                        <label>Height (cm)</label>
+                        <input
+                            type="number"
+                            name="height"
+                            value={formData.height}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="input-field">
+                        <label>Weight (kg)</label>
+                        <input
+                            type="number"
+                            name="weight"
+                            value={formData.weight}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <button type="submit">Add User</button>
             </form>
 
 

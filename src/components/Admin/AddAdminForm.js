@@ -7,7 +7,7 @@ import './AddAdminForm.scss';
 
 const AddAdminForm = () => {
     const dispatch = useDispatch();
-    const { loading, successMessage, error } = useSelector(state => state.adminRegister);
+    const { loading, successMessage, error, token } = useSelector(state => state.adminRegister);
 
     const [formData, setFormData] = useState({
         username: '',
@@ -18,11 +18,14 @@ const AddAdminForm = () => {
     useEffect(() => {
         if (successMessage) {
             toast.success(successMessage);
+            if (token) {
+                localStorage.setItem('adminToken', token);
+            }
         }
         if (error) {
             toast.error(error);
         }
-    }, [successMessage, error]);
+    }, [successMessage, error, token]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -68,7 +71,6 @@ const AddAdminForm = () => {
                 />
                 <button type="submit">Add</button>
             </form>
-
 
             <ToastContainer
                 position="top-right"

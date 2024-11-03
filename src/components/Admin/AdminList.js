@@ -11,7 +11,7 @@ const AdminList = () => {
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [editedAdminId, setEditedAdminId] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(''); // State cho ô tìm kiếm
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchAdmins = async () => {
@@ -85,11 +85,23 @@ const AdminList = () => {
         }
     };
 
+    const handleResetPassword = async (adminId) => {
+        const confirmReset = window.confirm("Do you want to reset the password for this admin?");
+        if (confirmReset) {
+            try {
+                await axios.put(`http://localhost:3310/api/admin/reset-password`, { id: adminId });
+                toast.success('Password reset successfully');
+            } catch (error) {
+                toast.error('Failed to reset password');
+            }
+        }
+    };
+
     const filteredAdmins = admins.filter((admin) =>
         admin.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const totalPages = Math.ceil(total / 8); // Tính tổng số trang
+    const totalPages = Math.ceil(total / 8);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -159,6 +171,7 @@ const AdminList = () => {
                                 <button className='toggle-button' onClick={() => handleToggleActive(admin.id, admin.is_active)}>
                                     {admin.is_active ? 'Deactivate' : 'Activate'}
                                 </button>
+                                <button className='reset-button' onClick={() => handleResetPassword(admin.id)}>Reset Password</button>
                             </td>
                         </tr>
                     ))}

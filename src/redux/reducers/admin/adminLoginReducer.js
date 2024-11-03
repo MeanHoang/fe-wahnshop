@@ -1,33 +1,32 @@
-const initialLoginState = {
+import {
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+} from '../../action/types';
+
+const initialState = {
     loading: false,
-    isLoggedIn: false,
-    token: null, // Thêm token vào state
-    successMessage: null,
+    token: null,
     error: null,
 };
 
-export const adminLoginReducer = (state = initialLoginState, action) => {
-    console.log('Current State:', state);
-    console.log('Received Action:', action);
-
+const adminLoginReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'LOGIN_REQUEST':
-            console.log('Processing Login Request');
-            return { ...state, loading: true, error: null };
-        case 'LOGIN_SUCCESS':
-            console.log('Login Successful', action.payload);
+        case LOGIN_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                isLoggedIn: true,
-                token: action.payload.token, // Lưu trữ token
-                successMessage: action.payload.message, // Có thể thêm message nếu cần
-                error: null
+                token: action.payload.token,
+                error: null,
             };
-        case 'LOGIN_FAILURE':
-            console.log('Login Failed', action.payload);
-            return { ...state, loading: false, isLoggedIn: false, error: action.payload };
+        case LOGIN_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+            };
         default:
             return state;
     }
 };
+
+export default adminLoginReducer;

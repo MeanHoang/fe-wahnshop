@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // Khởi tạo useNavigate
+    const navigate = useNavigate(); // Initialize useNavigate
     const { loading, error, token } = useSelector(state => state.adminLogin);
 
     const [formData, setFormData] = useState({
@@ -16,34 +16,34 @@ const LoginForm = () => {
     });
 
     useEffect(() => {
-        // Nếu đăng nhập thành công (có token), thông báo và chuyển hướng
+        // If login is successful (token exists), show success message and navigate
         if (token) {
             toast.success('Login successful!');
-            navigate('/dashboard'); // Chuyển đến trang Dashboard
+            navigate('/dashboard'); // Redirect to Dashboard
         }
-        // Nếu có lỗi, hiển thị thông báo lỗi
+        // If there's an error, display the error message
         if (error) {
             toast.error(error);
         }
-    }, [token, error, navigate]); // Thêm navigate vào dependencies để tránh warning
+    }, [token, error, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData((prevData) => ({
+            ...prevData,
             [name]: value,
-        });
+        }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(loginAdmin(formData)); // Gọi action đăng nhập với dữ liệu từ form
+        dispatch(loginAdmin(formData)); // Call login action with form data
     };
 
     return (
         <div className="login-form">
             <h2>Admin Login</h2>
-            {loading && <p>Loading...</p>} {/* Hiển thị loading khi đang đăng nhập */}
+            {loading && <p>Loading...</p>} {/* Show loading when logging in */}
             <form onSubmit={handleSubmit}>
                 <label>Username</label>
                 <input
@@ -61,7 +61,7 @@ const LoginForm = () => {
                     onChange={handleChange}
                     required
                 />
-                <button type="submit">Login</button>
+                <button type="submit" disabled={loading}>Login</button> {/* Disable button when loading */}
             </form>
 
             <ToastContainer

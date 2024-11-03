@@ -1,70 +1,98 @@
-// adminAction.js
-
+import {
+    REGISTER_ADMIN_REQUEST,
+    REGISTER_ADMIN_SUCCESS,
+    REGISTER_ADMIN_FAIL,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+    FETCH_ADMINS_REQUEST,
+    FETCH_ADMINS_SUCCESS,
+    FETCH_ADMINS_FAIL,
+    DELETE_ADMIN_SUCCESS,
+    TOGGLE_ADMIN_STATUS_SUCCESS,
+    UPDATE_ADMIN_SUCCESS,
+    UPDATE_ADMIN_FAIL
+} from './types.js';
+import { registerAdminAPI, loginAdminAPI } from '../../api/adminAPI';
 import axios from 'axios';
-
-// Địa chỉ API backend
-const API_URL = 'http://localhost:3310/api/admin';
+import { toast } from 'react-toastify';
 
 // Đăng ký admin
-export const registerAdmin = (adminData) => async (dispatch) => {
-    dispatch({ type: 'REGISTER_REQUEST' }); // Dispatch action yêu cầu đăng ký
-
+export const registerAdmin = (formData) => async (dispatch) => {
     try {
-        const response = await axios.post(`${API_URL}/register`, adminData);
-        console.log(">>> check res: ", response.data);
-        dispatch({ type: 'REGISTER_SUCCESS', payload: response.data.message }); // Dispatch khi thành công
+        dispatch({ type: REGISTER_ADMIN_REQUEST });
+        const response = await registerAdminAPI(formData);
+        const { token, message } = response.data;
+        dispatch({ type: REGISTER_ADMIN_SUCCESS, payload: { token, successMessage: message } });
     } catch (error) {
-        console.log(">>> check res: ", error.response.data);
-        dispatch({ type: 'REGISTER_FAILURE', payload: error.response.data.message || error.message }); // Dispatch khi lỗi
+        dispatch({ type: REGISTER_ADMIN_FAIL, payload: error.response.data.message });
+        toast.error('Registration failed: ' + error.response.data.message);
     }
 };
 
 // Đăng nhập admin
-export const loginAdmin = (loginData) => async (dispatch) => {
-    dispatch({ type: 'LOGIN_REQUEST' }); // Dispatch action yêu cầu đăng nhập
-
+export const loginAdmin = (credentials) => async (dispatch) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, loginData);
-        dispatch({ type: 'LOGIN_SUCCESS', payload: { token: response.data.token, message: 'Login successful!' } });
+        const response = await loginAdminAPI(credentials);
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: response.data,
+        });
     } catch (error) {
-        dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data.message || error.message }); // Dispatch khi lỗi
+        dispatch({
+            type: LOGIN_FAIL,
+            payload: error.response.data.message,
+        });
+        toast.error('Login failed: ' + error.response.data.message);
     }
 };
 
-//Delete Admin
-export const deleteAdmin = (adminId) => async (dispatch) => {
-    dispatch({ type: 'DELETE_ADMIN_REQUEST' }); // Dispatch action yêu cầu xóa admin
-
+// Lấy danh sách admin
+export const fetchAdmins = (page, searchTerm) => async (dispatch) => {
+    dispatch({ type: FETCH_ADMINS_REQUEST });
     try {
-        await axios.delete(`${API_URL}/profile`, { data: { id: adminId } });
-        dispatch({ type: 'DELETE_ADMIN_SUCCESS', payload: adminId }); // Dispatch khi thành công
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:3310/api/admin?page=${page}&limit=8&searchTerm=${searchTerm}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        dispatch({ type: FETCH_ADMINS_SUCCESS, payload: response.data });
     } catch (error) {
-        dispatch({ type: 'DELETE_ADMIN_FAILURE', payload: error.response.data.message || error.message }); // Dispatch khi lỗi
+        dispatch({ type: FETCH_ADMINS_FAIL, payload: error.response?.data?.message || error.message });
+        toast.error('Failed to fetch admins: ' + (error.response?.data?.message || error.message));
+    }
+};
+
+// Xóa admin
+export const deleteAdmin = (adminId) => async (dispatch) => {
+    try {
+        await axios.delete(`http://localhost:3310/api/admin/profile`, { data: { id: adminId } });
+        dispatch({ type: DELETE_ADMIN_SUCCESS, payload: adminId });
+        toast.success('Admin deleted successfully');
+    } catch (error) {
+        toast.error('Failed to delete admin: ' + (error.response?.data?.message || error.message));
+    }
+};
+
+// Cập nhật trạng thái admin
+export const updateAdminStatus = (adminId, isActive) => async (dispatch) => {
+    try {
+        await axios.put(`http://localhost:3310/api/admin/profile`, { id: adminId, is_active: isActive });
+        dispatch({ type: TOGGLE_ADMIN_STATUS_SUCCESS, payload: { id: adminId, is_active: isActive } });
+        toast.success(`Admin ${isActive ? 'activated' : 'deactivated'} successfully`);
+    } catch (error) {
+        toast.error('Failed to update admin status: ' + (error.response?.data?.message || error.message));
     }
 };
 
 // Cập nhật admin
-export const updateAdmin = (adminData) => async (dispatch) => {
-    dispatch({ type: 'UPDATE_ADMIN_REQUEST' }); // Dispatch action yêu cầu cập nhật admin
-
+export const updateAdmin = (adminId, name, value) => async (dispatch) => {
     try {
-        const response = await axios.put(`${API_URL}/profile`, adminData);
-        dispatch({ type: 'UPDATE_ADMIN_SUCCESS', payload: response.data }); // Dispatch khi thành công
+        await axios.put(`http://localhost:3310/api/admin/profile`, { id: adminId, [name]: value });
+        dispatch({ type: UPDATE_ADMIN_SUCCESS, payload: { id: adminId, [name]: value } });
+        toast.success('Admin updated successfully');
     } catch (error) {
-        dispatch({ type: 'UPDATE_ADMIN_FAILURE', payload: error.response.data.message || error.message }); // Dispatch khi lỗi
-    }
-};
-
-// Tìm kiếm admin
-export const searchAdmin = (partialUsername, page, limit) => async (dispatch) => {
-    dispatch({ type: 'SEARCH_ADMIN_REQUEST' });
-
-    try {
-        const response = await axios.get(`${API_URL}/search`, {
-            params: { username: partialUsername, page, limit },
-        });
-        dispatch({ type: 'SEARCH_ADMIN_SUCCESS', payload: response.data });
-    } catch (error) {
-        dispatch({ type: 'SEARCH_ADMIN_FAILURE', payload: error.response.data.message || error.message });
+        dispatch({ type: UPDATE_ADMIN_FAIL, payload: error.response?.data?.message || error.message });
+        toast.error('Failed to update admin: ' + (error.response?.data?.message || error.message));
     }
 };

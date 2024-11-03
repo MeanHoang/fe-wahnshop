@@ -1,0 +1,68 @@
+.add-user-form {
+    max-width: 600px; // Tăng chiều rộng tối đa nếu cần thiết
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column; // Căn chỉnh theo chiều dọc
+        gap: 15px; // Khoảng cách giữa các trường
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group {
+            display: flex; // Sử dụng flexbox
+            justify-content: space-between; // Căn giữa các trường
+            gap: 10px; // Khoảng cách giữa các input
+
+            .input-field {
+                flex: 1; // Cho phép các trường co giãn
+                display: flex;
+                flex-direction: column; // Sắp xếp label và input theo chiều dọc
+
+                // Đảm bảo các trường không bị chồng chéo và có chiều dài hợp lý
+                input,
+                select {
+                    width: 100%; // Đảm bảo trường rộng đầy đủ
+                    box-sizing: border-box; // Tính chiều rộng
+                }
+
+                .select-field {
+                    width: 100%; // Đảm bảo select rộng đầy đủ
+                    padding: 10px; // Thêm padding để tăng kích thước
+                    box-sizing: border-box; // Tính chiều rộng
+                }
+            }
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #0056b3;
+            }
+        }
+    }
+
+    p {
+        text-align: center;
+    }
+}
