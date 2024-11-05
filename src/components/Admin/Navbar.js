@@ -26,7 +26,7 @@ const Navbar = () => {
                     {showProductsSubMenu && (
                         <ul className="submenu-items">
                             <li><a href="/product">Product</a></li>
-                            <li><a href="#category">Category</a></li>
+                            <li><a href="/category">Category</a></li>
                             <li><a href="#attribute">Attribute</a></li>
                         </ul>
                     )}

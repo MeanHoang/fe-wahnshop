@@ -7,6 +7,7 @@ import ManageAdmin from './pages/Admin/ManageAdmin';
 import ManageUser from './pages/User/ManageUser';
 import AddUserPage from './pages/User/AddUserPage';
 import LoginForm from './components/Admin/LoginForm';
+import ManageCategory from './pages/Product/ManageCategory';
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
           <Route path="/admin/add" element={<AddAdminPage />} />
           <Route path="/user" element={<ManageUser />} />
           <Route path="/user/add" element={<AddUserPage />} />
+          <Route path="/category" element={<ManageCategory />} />
+
         </Routes>
       </div>
     </Router>
